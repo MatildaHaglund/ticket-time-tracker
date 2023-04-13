@@ -1,20 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, componentDidUpdate } from "react";
 
-function StopWatch() {
+
+function StopWatch(isActive) {
     const [time, setTime]= useState(0);
-    const [running, setRunning] = useState(true);
+    const [running, setRunning] = useState(isActive);
 
     useEffect(() => {
         let interval;
-        if(running) {
+        console.log(isActive)
+        if(isActive) {
+          console.log(time);
             interval = setInterval(() => {
                 setTime((prevTime) => prevTime + 10);
             }, 10);
-        } else if (!running){
+        } else {
+          console.log("notactive");
+          console.log(interval);
+          setTime(interval);
             clearInterval(interval);
+            
+            console.log(time);
         }
         return () => clearInterval(interval);
-    }, [running]);
+
+    }, [isActive]);
+
+
 return (
     <div className="stopwatch">
     <div className="numbers">
