@@ -1,41 +1,43 @@
-import React, { useState, useEffect, componentDidUpdate } from "react";
+import React, { useState, useEffect } from "react";
 
 
 function StopWatch(isActive) {
-    const [time, setTime]= useState(0);
-    const [running, setRunning] = useState(isActive);
+    let [time, setTime]= useState(0);
+    let [intervalId, setIntervalId] = useState(0);
+
 
     useEffect(() => {
         let interval;
-        console.log(isActive)
-        if(isActive) {
-          console.log(time);
+        if(isActive.isActive) {
             interval = setInterval(() => {
-                setTime((prevTime) => prevTime + 10);
-            }, 10);
+                setTime(time = time + 1);
+            }, 1000);
+            localStorage.setItem(isActive.id, time)
+            setIntervalId(interval);
         } else {
-          console.log("notactive");
-          console.log(interval);
-          setTime(interval);
-            clearInterval(interval);
-            
-            console.log(time);
+            clearInterval(intervalId);
         }
-        return () => clearInterval(interval);
+        return () => clearInterval(intervalId);
 
-    }, [isActive]);
+    }, [isActive.isActive]);
 
+    const hours = Math.floor(time / 3600);
+
+    // Minutes calculation
+    const minutes = Math.floor((time % 3600) / 60);
+  
+    // Seconds calculation
+    const seconds = Math.floor((time % 60));
 
 return (
     <div className="stopwatch">
     <div className="numbers">
+    <p className="stopwatch-time">
+        {hours}:{minutes.toString().padStart(2, "0")}:
+        {seconds.toString().padStart(2, "0")}
+      </p>
       <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
       <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}</span>
-    </div>
-    <div className="buttons">
-      <button onClick={() => setRunning(true)}>Start</button>
-      <button onClick={() => setRunning(false)}>Stop</button>
-      <button onClick={() => setTime(0)}>Reset</button>       
     </div>
   </div>
 );
